@@ -19,7 +19,7 @@ module.exports = function requestLogger(req, res, next) {
                     urlPath: req.originalUrl,
                     queryParams: req.query,
                     headers: req.headers,
-                    requestBody: req.body,  // Use the already captured body
+                    requestBody: req.body, 
                     responseStatus: res.statusCode,
                     responseHeaders: res.getHeaders()
                 });

@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser')
+const Fingerprint = require('express-fingerprint');
 
 const { PORT, SESSION_SECRET } = require('./config/config');
 const { connect } = require('./database'); 
@@ -38,7 +39,7 @@ app.use(session({
 }));
 
 //pipeline
-
+app.use(Fingerprint());
 app.use(sessionMiddleware);
 
 app.use(requestFilterMiddleware);

@@ -20,7 +20,8 @@ async function createSqlInjectionRuleGroup() {
       match_type: "contains", 
       value: "SELECT * FROM" 
     },
-    action: "block" 
+    action: "block" ,
+    anomalyScore: 10 
   });
   
 

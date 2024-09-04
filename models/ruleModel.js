@@ -13,12 +13,10 @@ const ruleSchema = new Schema({
   name: { type: String, required: true },
   description: { type: String },
   conditions: { type: conditionSchema, required: true },
-  action: { type: String, enum: ['block', 'allow', 'monitor'], required: true }
+  action: { type: String, enum: ['block', 'allow', 'monitor'], required: true },
+  anomalyScore: { type: Number, default: 0 }  
 });
 
 const Rule = mongoose.model('Rule', ruleSchema);
 
 module.exports = Rule;
-
-  
-//make users to be able to change redoslijed

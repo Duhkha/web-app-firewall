@@ -1,29 +1,53 @@
 const RuleGroup = require('../models/ruleGroupModel');
-const Rule = require('../models/ruleModel');
+const Session = require('../models/sessionModel');
 
 module.exports = async function wafMiddleware(req, res, next) {
     try {
+        const session = await Session.findOne({ sessionId: req.sessionData.sessionId });
+        
+        if (!session) {
+            console.error('WAF Middleware: Session not found');
+            return res.status(500).send('Internal Server Error');
+        }
+
+        let anomalyScoreIncrease = 0;
+
         const activeRuleGroups = await RuleGroup.find({ active: true }).populate('rules');
         for (const ruleGroup of activeRuleGroups) {
             for (const rule of ruleGroup.rules) {
                 if (evaluateRule(rule, req)) {
+                    console.log(`WAF Middleware: Rule matched ${rule.name}`);
+                    anomalyScoreIncrease += rule.anomalyScore;  
+
                     if (rule.action === 'block') {
-                        console.log(`Request matched blocking rule: ${rule.name}`);
+                        console.log(`WAF Middleware: Blocking request due to rule ${rule.name}`);
+                        session.anomalyScore += anomalyScoreIncrease;
+                        await session.save(); 
                         return res.status(403).send('Forbidden: Request blocked by WAF!! Stop trying to hack pls');
                     } else if (rule.action === 'allow') {
+                        session.anomalyScore += anomalyScoreIncrease;
+                        await session.save(); 
                         return next(); 
                     } else if (rule.action === 'monitor') {
-                        console.log(`Request matched monitoring rule: ${rule.name}`);
+                        console.log(`WAF Middleware: Monitoring request due to rule ${rule.name}`);
                     }
                 }
             }
         }
+
+        if (anomalyScoreIncrease > 0) {
+            console.log(`WAF Middleware: Increasing anomaly score by ${anomalyScoreIncrease}`);
+            session.anomalyScore += anomalyScoreIncrease;
+            await session.save(); // Ensure the session is saved after updating the anomaly score
+        }
+
         next(); 
     } catch (error) {
-        console.error('Error processing WAF rules:', error);
+        console.error('Error in WAF Middleware:', error);
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 const evaluateRule = (rule, req) => {
     return evaluateCondition(rule.conditions, req);
