@@ -12,6 +12,7 @@ const proxyMiddleware = require('./middleware/proxyMiddleware');
 const logger = require('./utils/logger');
 const adminRoutes = require('./routes/adminRoutes'); 
 const wafMiddleware = require('./middleware/wafMiddleware');
+const requestCaptureMiddleware = require('./middleware/requestCaptureMiddleware'); 
 
 const app = express();
 
@@ -42,7 +43,11 @@ app.use(sessionMiddleware);
 
 app.use(requestFilterMiddleware);
 
+app.use(requestCaptureMiddleware);
 
+//app.use(wafMiddleware);
+
+//app.use(requestLogger);
 
 
 app.use((req, res, next) => {
@@ -63,6 +68,11 @@ app.use((req, res, next) => {
       next();
   }
 });
+
+
+
+
+
 
 //app.use(adminRoutes);
 

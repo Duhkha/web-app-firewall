@@ -10,7 +10,9 @@ const sessionSchema = new Schema({
   anomalyScore: { type: Number, default: 0 }, 
   requestCount: { type: Number, default: 0 }, 
   requests: [{ type: Schema.Types.ObjectId, ref: 'Request' }], 
-  isBlocked: { type: Boolean, default: false } 
+  isBlocked: { type: Boolean, default: false },
+  lastRequestTime: { type: Date, default: Date.now }, 
+  rateLimitResetTime: { type: Date, default: Date.now } 
 }, { timestamps: true });
 
 const Session = mongoose.model('Session', sessionSchema);

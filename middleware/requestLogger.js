@@ -3,32 +3,13 @@ const Session = require('../models/sessionModel');
 
 module.exports = function requestLogger(req, res, next) {
     const originalEnd = res.end;
-    const chunks = [];
 
-
-    req.on('data', chunk => {
-        chunks.push(chunk);
-    });
-
-    req.on('end', () => {
-        const bodyBuffer = Buffer.concat(chunks);
-        req.rawBody = bodyBuffer;
-        
-        try {
-            req.body = JSON.parse(bodyBuffer.toString());
-        } catch (e) {
-            req.body = bodyBuffer.toString();
-        }
-    });
-
-  
     res.end = function (chunk, encoding) {
         res.end = originalEnd;
         res.end(chunk, encoding);
 
         const sessionData = req.sessionData;
 
-       
         setTimeout(async () => {
             try {
                 const newRequest = await Request.create({
@@ -38,7 +19,7 @@ module.exports = function requestLogger(req, res, next) {
                     urlPath: req.originalUrl,
                     queryParams: req.query,
                     headers: req.headers,
-                    requestBody: req.body,
+                    requestBody: req.body,  // Use the already captured body
                     responseStatus: res.statusCode,
                     responseHeaders: res.getHeaders()
                 });
