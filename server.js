@@ -1,7 +1,8 @@
 const express = require('express');
 const session = require('express-session');
-const bodyParser = require('body-parser')
+const expressLayouts = require('express-ejs-layouts');
 const Fingerprint = require('express-fingerprint');
+const path = require('path');
 
 const { PORT, SESSION_SECRET } = require('./config/config');
 const { connect } = require('./database'); 
@@ -11,16 +12,26 @@ const requestFilterMiddleware = require('./middleware/requestFilterMiddleware');
 const requestLogger = require('./middleware/requestLogger');
 const proxyMiddleware = require('./middleware/proxyMiddleware');
 const logger = require('./utils/logger');
-const adminRoutes = require('./routes/adminRoutes'); 
 const wafMiddleware = require('./middleware/wafMiddleware');
 const requestCaptureMiddleware = require('./middleware/requestCaptureMiddleware'); 
 
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+
+
 const app = express();
 
-app.use(express.static('public'));
-
-
 connect();
+
+app.use(express.static('public'));
+//app.use(express.static(path.join(__dirname, 'public')));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+
+
+
 
 
 logger.info('Server is starting...');
@@ -37,6 +48,9 @@ app.use(session({
       maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
+
+app.use(authRoutes);
+app.use(adminRoutes);
 
 //pipeline
 app.use(Fingerprint());
@@ -78,6 +92,8 @@ app.use((req, res, next) => {
 //app.use(adminRoutes);
 
 app.use(proxyMiddleware);
+
+
 
 
 app.listen(PORT, () => {

@@ -1,43 +1,33 @@
-//helper script for me but might use this 
-//for other users to populate their waf db
+// helper script to populate the database with an admin user
 
 const mongoose = require('mongoose');
-const Rule = require('./models/ruleModel');
-const RuleGroup = require('./models/ruleGroupModel');
+const User = require('./models/userModel'); // Adjust the path to your user model
 
-async function createSqlInjectionRuleGroup() {
+async function createAdminUser() {
   await mongoose.connect('mongodb://127.0.0.1:27017/waf', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
-  const rule = new Rule({
-    name: "Detect SQL Injection",
-    description: "Detects attempts to inject SQL commands into the application",
-    conditions: {
-      type: "MATCH", 
-      target: "body",
-      match_type: "contains", 
-      value: "SELECT * FROM" 
-    },
-    action: "block" ,
-    anomalyScore: 10 
-  });
+  const username = "admin"; // Customize as needed
+  const password = "admin123"; // Customize as needed
+
+  // Check if the user already exists
+  const existingUser = await User.findOne({ username });
+  if (existingUser) {
+    console.log('User already exists.');
+  } else {
+    const user = new User({
+      username,
+      password // This will be hashed automatically by the pre-save hook in the model
+    });
   
-
-  await rule.save();
-
-  const ruleGroup = new RuleGroup({
-    name: "SQL Injection Protection",
-    rules: [rule._id],
-    active: true
-  });
-
-  await ruleGroup.save();
-
-  console.log('SQL Injection rule and rule group created successfully.');
+    await user.save();
+  
+    console.log('Admin user created successfully.');
+  }
 
   mongoose.disconnect();
 }
 
-createSqlInjectionRuleGroup().catch(console.error);
+createAdminUser().catch(console.error);
