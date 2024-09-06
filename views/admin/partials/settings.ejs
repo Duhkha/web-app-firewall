@@ -61,14 +61,5 @@
         });
     });
 
-    function showNotification(message, type) {
-        const notification = document.getElementById('notification');
-        notification.className = `alert alert-${type}`;
-        notification.textContent = message;
-        notification.style.display = 'block';
-
-        setTimeout(() => {
-            notification.style.display = 'none';
-        }, 3000);
-    }
+  
 </script>

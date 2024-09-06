@@ -125,20 +125,29 @@
         tabs.forEach(tab => {
             tab.addEventListener('click', function(e) {
                 e.preventDefault();
-                // Remove active class from all tabs and content
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(tc => tc.classList.remove('active'));
 
-                // Add active class to the clicked tab and corresponding content
                 this.classList.add('active');
                 document.querySelector(this.getAttribute('href')).classList.add('active');
             });
         });
 
-        // Activate the first tab and content by default
         tabs[0].classList.add('active');
         tabContents[0].classList.add('active');
     });
+
+
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.className = `alert alert-${type}`;
+        notification.textContent = message;
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
 </script>
 
 

@@ -6,6 +6,7 @@ const conditionSchema = new Schema({
   inspect: { 
     type: String, 
     enum: [
+      'all', 
       'singleHeader', 
       'allHeaders', 
       'singleCookie', 
@@ -33,8 +34,8 @@ const conditionSchema = new Schema({
     ], 
     required: true 
   },
-  value: { type: String, required: true }, // string or regex to match
-  sub_conditions: [this] // nested conditions for AND/OR/NOT
+  value: { type: String, required: true } // string or regex to match
+  // sub_conditions: [this] .. this is for nested conditions but i will implement it later
 });
 
 const ruleSchema = new Schema({
