@@ -93,9 +93,9 @@ function toggleAddConditionButton() {
     const addConditionButton = document.getElementById('addConditionButton');
 
     if (globalConditionType === 'MATCH') {
-        addConditionButton.style.display = 'none'; // Hide button if first condition is MATCH
+        addConditionButton.style.display = 'none'; 
     } else {
-        addConditionButton.style.display = 'block'; // Show button for other condition types
+        addConditionButton.style.display = 'block';
     }
 }
 
@@ -108,7 +108,6 @@ function toggleDeleteConditionButton() {
 
 
     //submitButton
-    // Show the delete button only if there are conditions present
     if (conditionsContainer.children.length > 0) {
         deleteConditionButton.style.display = 'block';
         submitButton.style.display = 'block';
@@ -187,7 +186,6 @@ function addConditionRule(condition = {}) {
 
     const conditionTypeSelect = document.getElementById(`conditionType-${conditionId}`);
     
-    // Add event listener for the new inspect select
     const inspectSelect = document.getElementById(`inspect-${conditionId}`);
     const fieldNameGroup = document.getElementById(`fieldName-${conditionId}`).closest('.field-name-group');
 
@@ -227,7 +225,6 @@ function addConditionRule(condition = {}) {
 
     toggleAddConditionButton();
 
-    // Trigger initial state for field name visibility
     inspectSelect.dispatchEvent(new Event('change'));
 }
 
@@ -241,12 +238,11 @@ function deleteLastCondition() {
 
         toggleDeleteConditionButton();
 
-        // If we go back to one condition, reset globalConditionType and enable type change
         if (conditionsCount === 1) {
             const conditionTypeSelect = document.querySelector('.condition-type-select');
             if (conditionTypeSelect) {
                 conditionTypeSelect.removeAttribute('disabled');
-                globalConditionType = 'MATCH'; // Reset to MATCH
+                globalConditionType = 'MATCH'; 
                 toggleAddConditionButton();
             }
         }
@@ -254,11 +250,9 @@ function deleteLastCondition() {
 }
 
 if (!formListenerAttached) {
-    // Bind form submission (attach listener only once)
     document.getElementById('ruleForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Gather form data
         const formData = {
             ruleId: document.getElementById('ruleId').value,
             ruleName: document.getElementById('ruleName').value,
@@ -308,25 +302,19 @@ if (!formListenerAttached) {
 }
 
 function closeRuleModal() {
-    // Hide the modal
     document.getElementById('ruleModal').style.display = 'none';
 
-    // Reset the form elements
     const form = document.getElementById('ruleForm');
-    form.reset(); // Resets all input fields in the form
+    form.reset(); 
 
-    // Clear the conditions container (removes all dynamically added conditions)
     const conditionsContainer = document.getElementById('conditionsContainer');
-    conditionsContainer.innerHTML = ''; // Clears all child elements
+    conditionsContainer.innerHTML = ''; 
 
-    // Reset the global condition count and type
     conditionsCount = 0;
-    globalConditionType = 'MATCH'; // Reset to default MATCH
+    globalConditionType = 'MATCH'; 
 
-    // Hide the delete condition button since there will be no conditions initially
     toggleDeleteConditionButton();
 
-    // Ensure that the "Add Condition" button is visible
     toggleAddConditionButton();
 
     const addConditionButton = document.getElementById('addConditionButton');

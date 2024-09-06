@@ -3,7 +3,7 @@
         <span class="close-button" onclick="closeRuleGroupModal()">&times;</span>
         <h3 id="ruleGroupModalTitle">Add/Edit Rule Group</h3>
         <form id="ruleGroupForm">
-            <input type="hidden" name="ruleGroupId" id="ruleGroupId">
+            <input type="hidden" name="ruleGroupId" id="ruleGroupId" value="">
             <div class="form-group">
                 <label for="ruleGroupName">Rule Group Name:</label>
                 <input type="text" class="form-control" id="ruleGroupName" name="ruleGroupName" required>
@@ -46,7 +46,6 @@
                 document.getElementById('ruleGroupName').value = group.name;
                 document.getElementById('ruleGroupDescription').value = group.description;
 
-                // Populate the rules
                 const ruleGroupRulesContainer = document.getElementById('ruleGroupRules');
                 ruleGroupRulesContainer.innerHTML = '';
                 group.rules.forEach(rule => {
@@ -65,9 +64,10 @@
     function addRuleToGroup(rule = {}) {
         const ruleTemplate = `
             <div class="rule">
+                <input type="hidden" name="ruleId[]" value="${rule._id || ''}"> <!-- Hidden field to pass the rule's ID -->
                 <div class="form-group">
-                    <label for="ruleName">Rule Name:</label>
-                    <input type="text" class="form-control" name="ruleName[]" value="${rule.ruleName || ''}" required>
+                    <label for="name">Rule Name:</label>
+                    <input type="text" class="form-control" name="name[]" value="${rule.name || ''}" required>
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
@@ -189,4 +189,62 @@
     function deleteCondition(element) {
         element.closest('.condition').remove();
     }
+
+    document.getElementById('ruleGroupForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = {
+            ruleGroupId: document.getElementById('ruleGroupId').value,
+            ruleGroupName: document.getElementById('ruleGroupName').value,
+            ruleGroupDescription: document.getElementById('ruleGroupDescription').value,
+            rules: []
+        };
+
+        document.querySelectorAll('#ruleGroupRules .rule').forEach(ruleElement => {
+            const rule = {
+                _id: ruleElement.querySelector('input[name="ruleId[]"]').value,
+                name: ruleElement.querySelector('input[name="name[]"]').value,
+                description: ruleElement.querySelector('input[name="description[]"]').value,
+                anomalyScore: ruleElement.querySelector('input[name="anomalyScore[]"]').value,
+                action: ruleElement.querySelector('select[name="action[]"]').value,
+                conditions: []
+            };
+
+            ruleElement.querySelectorAll('.condition').forEach(conditionElement => {
+                const condition = {
+                    type: conditionElement.querySelector('select[name="conditionType[]"]').value,
+                    inspect: conditionElement.querySelector('select[name="inspect[]"]').value,
+                    fieldName: conditionElement.querySelector('input[name="fieldName[]"]').value,
+                    match_type: conditionElement.querySelector('select[name="matchType[]"]').value,
+                    value: conditionElement.querySelector('input[name="value[]"]').value,
+                };
+                rule.conditions.push(condition);
+            });
+
+            formData.rules.push(rule);
+        });
+
+        const url = formData.ruleGroupId ? `/admin/rule-groups/${formData.ruleGroupId}/edit` : '/admin/rule-groups';
+        const method = formData.ruleGroupId ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                showNotification('Rule group saved successfully!', 'success');
+                closeRuleGroupModal(); 
+            } else {
+                showNotification('Error saving rule group. Please try again.', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Error saving rule group. Please try again.', 'danger');
+        });
+    });
 </script>

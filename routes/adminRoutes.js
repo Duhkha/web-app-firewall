@@ -11,16 +11,12 @@ router.post('/rules', authMiddleware, express.json(), adminController.saveRule);
 router.put('/rules/:id/edit', authMiddleware, express.json(), adminController.saveRule);
 router.delete('/rules/:id', authMiddleware, adminController.deleteRule);
 
+router.get('/rule-groups/:id/edit', authMiddleware, express.json(), adminController.getRuleGroup);
+router.post('/rule-groups', authMiddleware, express.json(), adminController.saveRuleGroup);
+router.put('/rule-groups/:id/edit', authMiddleware, express.json(), adminController.saveRuleGroup);
+router.delete('/rule-groups/:id', authMiddleware, adminController.deleteRuleGroup);
+router.put('/rule-groups/:id/toggle-activation', authMiddleware, adminController.toggleActivation);
 
-
-/* 
-router.get('/rule-groups', adminController.getRuleGroups);
-router.post('/rule-groups', adminController.addRuleGroup);
-router.get('/rule-groups/:id/edit', adminController.editRuleGroup);
-router.put('/rule-groups/:id/edit', adminController.updateRuleGroup);
-router.post('/rule-groups/:id/toggle-activation', adminController.toggleRuleGroupActivation);
-router.delete('/rule-groups/:id', adminController.deleteRuleGroup);
-*/
 
 
 module.exports = router;

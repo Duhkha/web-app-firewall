@@ -111,13 +111,35 @@
         </div>
     </div>
 
-        <li class="nav-item">
-            <a class="nav-link" href="/admin/logout">Logout</a>
-        </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/logout" onclick="event.preventDefault(); logout();">Logout</a>
+    </li>
+    
+    
 
 </div>
 
 <script>
+    function logout() {
+        fetch('/admin/logout', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = 'admin/login';
+            } else {
+                alert('Logout failed. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error logging out:', error);
+            alert('Logout failed. Please try again.');
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const tabs = document.querySelectorAll('.nav-link');
         const tabContents = document.querySelectorAll('.tab-pane');

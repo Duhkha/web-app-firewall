@@ -8,7 +8,6 @@
 <ul>
     <% rules.forEach(rule => { %>
         <li class="existing-rule">
-            <strong>ID:</strong> <%= rule._id %><br>
             <strong>Name:</strong> <%= rule.name %><br>
             <strong>Description:</strong> <%= rule.description %><br>
             (Action: <%= rule.action %>, Anomaly Score: <%= rule.anomalyScore %>)
