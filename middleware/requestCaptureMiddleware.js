@@ -1,6 +1,21 @@
 module.exports = function requestCaptureMiddleware(req, res, next) {
     const chunks = [];
 
+    const parseCookies = (cookieHeader) => {
+        const cookies = {};
+        if (cookieHeader) {
+            cookieHeader.split(';').forEach(cookie => {
+                const [name, value] = cookie.split('=').map(part => part.trim());
+                cookies[name] = value;
+            });
+        }
+        return cookies;
+    };
+
+    const cleanIpAddress = (ipAddress) => {
+        return ipAddress.includes('::ffff:') ? ipAddress.split('::ffff:')[1] : ipAddress;
+    };
+
     req.on('data', chunk => {
         chunks.push(chunk);
     });
@@ -15,13 +30,17 @@ module.exports = function requestCaptureMiddleware(req, res, next) {
             req.body = bodyBuffer.toString();
         }
 
+        const cookies = parseCookies(req.headers.cookie);
+
         req.capturedRequest = {
-            method: req.method,
-            urlPath: req.originalUrl,
-            queryParams: req.query,
-            headers: req.headers,
-            ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-            userAgent: req.headers['user-agent'],
+            method: req.method, 
+            uriPath: req.originalUrl.split('?')[0], 
+            queryString: req.originalUrl.split('?')[1] || '', 
+            queryParams: req.query, 
+            headers: req.headers, 
+            cookies, 
+            ipAddress: cleanIpAddress(req.headers['x-forwarded-for'] || req.connection.remoteAddress), 
+            userAgent: req.headers['user-agent'], 
             requestBody: req.body 
         };
 

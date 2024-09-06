@@ -14,14 +14,16 @@ module.exports = function requestLogger(req, res, next) {
             try {
                 const newRequest = await Request.create({
                     sessionId: sessionData._id,
-                    ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-                    method: req.method,
-                    urlPath: req.originalUrl,
-                    queryParams: req.query,
-                    headers: req.headers,
-                    requestBody: req.body, 
-                    responseStatus: res.statusCode,
-                    responseHeaders: res.getHeaders()
+                    ipAddress: req.capturedRequest.ipAddress, 
+                    method: req.capturedRequest.method, 
+                    urlPath: req.capturedRequest.uriPath, 
+                    queryString: req.capturedRequest.queryString, 
+                    queryParams: req.capturedRequest.queryParams, 
+                    headers: req.capturedRequest.headers, 
+                    cookies: req.capturedRequest.cookies, 
+                    requestBody: req.capturedRequest.requestBody, 
+                    responseStatus: res.statusCode, 
+                    responseHeaders: res.getHeaders() 
                 });
 
                 await Session.findByIdAndUpdate(sessionData._id, {

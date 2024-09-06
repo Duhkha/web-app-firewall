@@ -18,7 +18,7 @@ exports.postLogin = async (req, res) => {
         if (user && await user.comparePassword(password)) {
             const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
-            res.cookie('token', token, { httpOnly: true });
+            res.cookie('vbuck', token, { httpOnly: true });
             return res.redirect('/admin');
         } else {
             return res.render('auth/login', { title: 'Admin Login', error: 'Invalid credentials', user: null });
@@ -30,6 +30,6 @@ exports.postLogin = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('vbuck');
     res.redirect('/admin/login');
 };

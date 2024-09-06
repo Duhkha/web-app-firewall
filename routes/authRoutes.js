@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 
-router.get('/admin/login', authController.getLogin);
-router.post('/admin/login', express.urlencoded({ extended: true }), authController.postLogin);
-router.get('/admin/logout', authController.logout);
+router.get('/login', authController.getLogin);
+router.post('/login', express.urlencoded({ extended: true }), authController.postLogin);
+router.get('/logout', authController.logout);
 
 module.exports = router;

@@ -9,7 +9,7 @@ module.exports = async function authMiddleware(req, res, next) {
         return acc;
     }, {}) : {};
 
-    const token = cookies.token;
+    const token = cookies.vbuck;
 
     if (!token) {
         return res.redirect('/admin/login');
@@ -20,7 +20,7 @@ module.exports = async function authMiddleware(req, res, next) {
         const user = await User.findById(decoded.userId);
 
         if (!user) {
-            res.clearCookie('token');
+            res.clearCookie('vbuck');
             return res.redirect('/admin/login');
         }
 
@@ -28,7 +28,7 @@ module.exports = async function authMiddleware(req, res, next) {
         next();
     } catch (error) {
         console.error('JWT verification failed:', error);
-        res.clearCookie('token');
+        res.clearCookie('vbuck');
         return res.redirect('/admin/login');
     }
 };

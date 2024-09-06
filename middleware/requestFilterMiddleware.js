@@ -1,30 +1,21 @@
-//shouldn't be done, but for dev purposes
-
 const path = require('path');
-const staticExtensions = ['.js', '.css', '.png', '.jpg', '.woff2', '.ico', '.jpeg'];
-const ignoredPaths = ['/socket.io/', '/assets/', '/api/Quantitys/'];
+
+const ignoredPaths = ['/socket.io/', '/assets/', '/api/Quantitys/']; // Add any other paths as needed
 
 const requestFilterMiddleware = (req, res, next) => {
     const ext = path.extname(req.path);
 
-    /*
-    if (staticExtensions.includes(ext) || ignoredPaths.some(ignoredPath => req.url.startsWith(ignoredPath))) {
+    if (ignoredPaths.some(ignoredPath => req.url.startsWith(ignoredPath))) {
         req.skipMiddlewares = true;  
     }
-*/
 
-//for dev purposes
-if (req.method != 'POST') {
-    req.skipMiddlewares = true; 
-}
+    /*
+    if (req.method !== 'POST') {
+        req.skipMiddlewares = true; 
+    }
+    */
 
-if (ignoredPaths.some(ignoredPath => req.url.startsWith(ignoredPath))) {
-    req.skipMiddlewares = true; 
-}
-
-
-
-    next();
+    next(); 
 };
 
 module.exports = requestFilterMiddleware;

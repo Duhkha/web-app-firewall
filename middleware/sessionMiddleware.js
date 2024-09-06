@@ -45,7 +45,7 @@ module.exports = async function sessionMiddleware(req, res, next) {
 
         if (session.anomalyScore > settings.anomalyScoreThreshold) {
           console.log(`Anomaly score exceeded for session: ${session.sessionId}`);
-          return res.redirect('/anomaly_detected.html');
+          return res.redirect('/blocked.html');
         }
 
         if (!session.ipAddresses.includes(ip)) {
