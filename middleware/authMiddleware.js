@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
 const { JWT_SECRET } = process.env;
 
-module.exports = function authMiddleware(req, res, next) {
-    // manually parse the cookies from the request headers
+module.exports = async function authMiddleware(req, res, next) {
     const cookies = req.headers.cookie ? req.headers.cookie.split(';').reduce((acc, cookie) => {
         const [name, value] = cookie.trim().split('=');
         acc[name] = value;
@@ -17,7 +17,14 @@ module.exports = function authMiddleware(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        req.userId = decoded.userId;
+        const user = await User.findById(decoded.userId);
+
+        if (!user) {
+            res.clearCookie('token');
+            return res.redirect('/admin/login');
+        }
+
+        req.user = user;  
         next();
     } catch (error) {
         console.error('JWT verification failed:', error);

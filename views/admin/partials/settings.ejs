@@ -1,0 +1,74 @@
+<form id="settingsForm">
+    <div class="form-group">
+        <label for="blockedCountries">Blocked Countries (comma separated):</label>
+        <input type="text" class="form-control" id="blockedCountries" name="blockedCountries" value="<%= settings.blockedCountries.join(', ') %>">
+    </div>
+    <div class="form-group">
+        <label for="rateLimitWindowMs">Rate Limit Window (ms):</label>
+        <input type="number" class="form-control" id="rateLimitWindowMs" name="rateLimitWindowMs" value="<%= settings.rateLimit.windowMs %>">
+    </div>
+    <div class="form-group">
+        <label for="rateLimitMaxRequests">Rate Limit Max Requests:</label>
+        <input type="number" class="form-control" id="rateLimitMaxRequests" name="rateLimitMaxRequests" value="<%= settings.rateLimit.maxRequests %>">
+    </div>
+    <div class="form-group">
+        <label for="anomalyScoreThreshold">Anomaly Score Threshold:</label>
+        <input type="number" class="form-control" id="anomalyScoreThreshold" name="anomalyScoreThreshold" value="<%= settings.anomalyScoreThreshold %>">
+    </div>
+    <div class="form-group">
+        <label for="blockedIPs">Blocked IPs (comma separated):</label>
+        <input type="text" class="form-control" id="blockedIPs" name="blockedIPs" value="<%= settings.blockedIPs.join(', ') %>">
+    </div>
+    <div class="form-group">
+        <label for="whitelistedIPs">Whitelisted IPs (comma separated):</label>
+        <input type="text" class="form-control" id="whitelistedIPs" name="whitelistedIPs" value="<%= settings.whitelistedIPs.join(', ') %>">
+    </div>
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+</form>
+
+<script>
+    document.getElementById('settingsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Gather form data
+        const formData = {
+            blockedCountries: document.getElementById('blockedCountries').value.split(',').map(c => c.trim()),
+            rateLimitWindowMs: parseInt(document.getElementById('rateLimitWindowMs').value),
+            rateLimitMaxRequests: parseInt(document.getElementById('rateLimitMaxRequests').value),
+            anomalyScoreThreshold: parseInt(document.getElementById('anomalyScoreThreshold').value),
+            blockedIPs: document.getElementById('blockedIPs').value.split(',').map(ip => ip.trim()),
+            whitelistedIPs: document.getElementById('whitelistedIPs').value.split(',').map(ip => ip.trim())
+        };
+
+        // Send JSON data to the server
+        fetch('/admin/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                showNotification('Settings saved successfully!', 'success');
+            } else {
+                showNotification('Error saving settings. Please try again.', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Error saving settings. Please try again.', 'danger');
+        });
+    });
+
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.className = `alert alert-${type}`;
+        notification.textContent = message;
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+</script>

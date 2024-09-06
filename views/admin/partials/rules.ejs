@@ -1,0 +1,73 @@
+<h3>Manage Rules</h3>
+
+<!-- Button to add a new rule -->
+<button type="button" class="btn btn-primary mb-3" onclick="openAddModal()">Add New Rule</button>
+
+<!-- Existing Rules -->
+<h4>Existing Rules</h4>
+<ul>
+    <% rules.forEach(rule => { %>
+        <li class="existing-rule">
+            <strong>ID:</strong> <%= rule._id %><br>
+            <strong>Name:</strong> <%= rule.name %><br>
+            <strong>Description:</strong> <%= rule.description %><br>
+            (Action: <%= rule.action %>, Anomaly Score: <%= rule.anomalyScore %>)
+            <ul>
+                <% rule.conditions.forEach(condition => { %>
+                    <li>
+                        <strong>Condition:</strong> <%= condition.type %> - Inspect: <%= condition.inspect %>, 
+                        <% if (condition.fieldName) { %>
+                            Field Name: <%= condition.fieldName %>, 
+                        <% } %>
+                        Match Type: <%= condition.match_type %>, Value: <%= condition.value %>
+                    </li>
+                <% }) %>
+            </ul>
+            <div class="edit-delete-buttons">
+                <!-- Trigger the modal for editing -->
+                <button type="button" class="btn btn-secondary" onclick="openEditModal('<%= rule._id %>')">Edit Rule</button>
+                <!-- Trigger the delete action -->
+                <button type="button" class="btn btn-danger" onclick="deleteRule('<%= rule._id %>')">Delete Rule</button>
+            </div>
+        </li>
+    <% }) %>
+</ul>
+
+<!-- Reuse the existing modal -->
+<%- include('ruleModal') %>
+
+<script>
+    function deleteRule(ruleId) {
+        if (confirm('Are you sure you want to delete this rule?')) {
+            fetch(`/admin/rules/${ruleId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    showNotification('Rule deleted successfully!', 'success');
+                    location.reload();
+                } else {
+                    showNotification('Error deleting rule. Please try again.', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Error deleting rule. Please try again.', 'danger');
+            });
+        }
+    }
+
+    function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.className = `alert alert-${type}`;
+        notification.textContent = message;
+        notification.style.display = 'block';
+
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);
+    }
+</script>

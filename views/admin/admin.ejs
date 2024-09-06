@@ -1,0 +1,144 @@
+<style>
+    .tab-content > div {
+        display: none;
+    }
+    .tab-content > .active {
+        display: block;
+    }
+    .nav-tabs {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        border-bottom: 2px solid #ddd;
+    }
+    .nav-tabs .nav-item {
+        margin-right: 5px;
+    }
+    .nav-tabs .nav-link {
+        padding: 10px 15px;
+        background-color: #f1f1f1;
+        border: 1px solid #ddd;
+        border-bottom: none;
+        cursor: pointer;
+    }
+    .nav-tabs .nav-link.active {
+        background-color: #ffffff;
+        border-color: #ddd;
+        border-bottom: 2px solid white;
+    }
+    .alert {
+        padding: 15px;
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 600px;
+    }
+    .close-button {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close-button:hover,
+    .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    <h1 class="mb-3">Admin Dashboard</h1>
+
+        <!-- Notification Area -->
+        <div id="notification" class="alert" style="display:none;"></div>
+
+    
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="adminTabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#settings">Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#rules">Rules</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#ruleGroups">Rule Groups</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="adminTabContent">
+        <div class="tab-pane active" id="settings">
+            <%- include('partials/settings', { settings }) %>
+        </div>
+        <div class="tab-pane" id="rules">
+            <%- include('partials/rules', { settings }) %>
+        </div>
+
+        <div class="tab-pane" id="ruleGroups">
+            <%- include('partials/ruleGroups', { settings }) %>
+        </div>
+    </div>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/logout">Logout</a>
+        </li>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.nav-link');
+        const tabContents = document.querySelectorAll('.tab-pane');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Remove active class from all tabs and content
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+
+                // Add active class to the clicked tab and corresponding content
+                this.classList.add('active');
+                document.querySelector(this.getAttribute('href')).classList.add('active');
+            });
+        });
+
+        // Activate the first tab and content by default
+        tabs[0].classList.add('active');
+        tabContents[0].classList.add('active');
+    });
+</script>
+
+

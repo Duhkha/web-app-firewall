@@ -3,7 +3,11 @@ const User = require('../models/userModel');
 const { JWT_SECRET } = process.env;
 
 exports.getLogin = (req, res) => {
-    res.render('login', { error: null });
+    res.render('auth/login', {
+        title: 'Admin Login',
+        user: null,
+        error: null
+    });
 };
 
 exports.postLogin = async (req, res) => {
@@ -17,11 +21,11 @@ exports.postLogin = async (req, res) => {
             res.cookie('token', token, { httpOnly: true });
             return res.redirect('/admin');
         } else {
-            return res.render('login', { error: 'Invalid credentials' });
+            return res.render('auth/login', { title: 'Admin Login', error: 'Invalid credentials', user: null });
         }
     } catch (error) {
-        console.error(error);
-        return res.render('login', { error: 'An error occurred' });
+        console.error('Login error:', error);
+        return res.render('auth/login', { title: 'Admin Login', error: 'An error occurred', user: null });
     }
 };
 

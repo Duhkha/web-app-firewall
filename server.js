@@ -49,8 +49,8 @@ app.use(session({
   }
 }));
 
-app.use(authRoutes);
-app.use(adminRoutes);
+app.use('/admin', adminRoutes);
+app.use('/', authRoutes);
 
 //pipeline
 app.use(Fingerprint());
@@ -91,7 +91,7 @@ app.use((req, res, next) => {
 
 //app.use(adminRoutes);
 
-app.use(proxyMiddleware);
+//app.use(proxyMiddleware);
 
 
 

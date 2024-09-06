@@ -1,0 +1,232 @@
+<div id="ruleModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeRuleModal()">&times;</span>
+        <h3 id="modalTitle">Add Rule</h3>
+        <form id="ruleForm">
+            <input type="hidden" name="ruleId" id="ruleId">
+            
+            <!-- Rule Name -->
+            <div class="form-group">
+                <label for="ruleName">Rule Name:</label>
+                <input type="text" class="form-control" id="ruleName" name="ruleName" required>
+            </div>
+            
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" class="form-control" id="description" name="description">
+            </div>
+            
+            <!-- Anomaly Score -->
+            <div class="form-group">
+                <label for="anomalyScore">Anomaly Score:</label>
+                <input type="number" class="form-control" id="anomalyScore" name="anomalyScore">
+            </div>
+            
+            <!-- Action -->
+            <div class="form-group">
+                <label for="action">Action:</label>
+                <select class="form-control" id="action" name="action" required>
+                    <option value="block">Block</option>
+                    <option value="allow">Allow</option>
+                    <option value="count">Count</option>
+                    <option value="captcha">Captcha</option>
+                </select>
+            </div>
+            
+            <!-- Conditions Section -->
+            <h4>Conditions</h4>
+            <div id="conditionsContainer"></div> <!-- Container for dynamically added conditions -->
+            
+            <!-- Button to add a new condition -->
+            <button type="button" class="btn btn-secondary" onclick="addConditionRule()">Add Condition</button>
+            
+            <!-- Save Changes Button -->
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+
+
+
+function openAddModal() {
+    // Clear the form for adding a new rule
+    document.getElementById('modalTitle').textContent = 'Add Rule';
+    document.getElementById('ruleId').value = '';
+    document.getElementById('ruleName').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('anomalyScore').value = '';
+    document.getElementById('action').value = 'block'; // Default value
+    document.getElementById('conditionsContainer').innerHTML = ''; // Clear conditions
+
+    // Show the modal
+    document.getElementById('ruleModal').style.display = 'block';
+}
+
+function openEditModal(ruleId) {
+    fetch(`/admin/rules/${ruleId}/edit`)
+        .then(response => response.json())
+        .then(rule => {
+            document.getElementById('modalTitle').textContent = 'Edit Rule';
+            document.getElementById('ruleId').value = rule._id;
+            document.getElementById('ruleName').value = rule.name;
+            document.getElementById('description').value = rule.description;
+            document.getElementById('anomalyScore').value = rule.anomalyScore;
+            document.getElementById('action').value = rule.action;
+
+            const conditionsContainer = document.getElementById('conditionsContainer');
+            conditionsContainer.innerHTML = ''; // Clear previous conditions
+
+            rule.conditions.forEach((condition) => {
+                addConditionRule(condition);
+            });
+
+            document.getElementById('ruleModal').style.display = 'block';
+        })
+        .catch(error => console.error('Error loading rule:', error));
+}
+
+
+
+function addConditionRule(condition = {}) {
+    const conditionsContainer = document.getElementById('conditionsContainer');
+
+    // Create a new condition block with unique ID
+    const conditionId = `condition-${Date.now()}`;
+    const conditionTemplate = `
+        <div id="${conditionId}" class="condition">
+            <div class="form-group">
+                <label for="conditionType-${conditionId}">Condition Type:</label>
+                <select name="conditionType[]" id="conditionType-${conditionId}" class="form-control condition-type-select" required>
+                    <option value="MATCH" ${condition.type === 'MATCH' ? 'selected' : ''}>Matches the statement</option>
+                    <option value="AND" ${condition.type === 'AND' ? 'selected' : ''}>Matches all the statements (AND)</option>
+                    <option value="OR" ${condition.type === 'OR' ? 'selected' : ''}>Matches at least one statement (OR)</option>
+                    <option value="NOT" ${condition.type === 'NOT' ? 'selected' : ''}>Doesn't match the statement (NOT)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="inspect-${conditionId}">Inspect:</label>
+                <select name="inspect[]" id="inspect-${conditionId}" class="form-control inspect-select" required>
+                    <option value="singleHeader" ${condition.inspect === 'singleHeader' ? 'selected' : ''}>Single Header</option>
+                    <option value="allHeaders" ${condition.inspect === 'allHeaders' ? 'selected' : ''}>All Headers</option>
+                    <option value="singleCookie" ${condition.inspect === 'singleCookie' ? 'selected' : ''}>Single Cookie</option>
+                    <option value="allCookies" ${condition.inspect === 'allCookies' ? 'selected' : ''}>All Cookies</option>
+                    <option value="singleQueryParameter" ${condition.inspect === 'singleQueryParameter' ? 'selected' : ''}>Single Query Parameter</option>
+                    <option value="allQueryParameters" ${condition.inspect === 'allQueryParameters' ? 'selected' : ''}>All Query Parameters</option>
+                    <option value="uriPath" ${condition.inspect === 'uriPath' ? 'selected' : ''}>URI Path</option>
+                    <option value="queryString" ${condition.inspect === 'queryString' ? 'selected' : ''}>Query String</option>
+                    <option value="body" ${condition.inspect === 'body' ? 'selected' : ''}>Body</option>
+                    <option value="method" ${condition.inspect === 'method' ? 'selected' : ''}>HTTP Method</option>
+                </select>
+            </div>
+            
+            <div class="form-group field-name-group" style="display:none;">
+                <label for="fieldName-${conditionId}">Field Name (if applicable):</label>
+                <input type="text" name="fieldName[]" id="fieldName-${conditionId}" class="form-control field-name-input" placeholder="Field Name" value="${condition.fieldName || ''}">
+            </div>
+        
+            <div class="form-group">
+                <label for="matchType-${conditionId}">Match Type:</label>
+                <select name="matchType[]" id="matchType-${conditionId}" class="form-control match-type-select" required>
+                    <option value="exactlyMatches" ${condition.match_type === 'exactlyMatches' ? 'selected' : ''}>Exactly matches string</option>
+                    <option value="startsWith" ${condition.match_type === 'startsWith' ? 'selected' : ''}>Starts with string</option>
+                    <option value="endsWith" ${condition.match_type === 'endsWith' ? 'selected' : ''}>Ends with string</option>
+                    <option value="contains" ${condition.match_type === 'contains' ? 'selected' : ''}>Contains string</option>
+                    <option value="containsWord" ${condition.match_type === 'containsWord' ? 'selected' : ''}>Contains word</option>
+                    <option value="matchesRegexPatternSet" ${condition.match_type === 'matchesRegexPatternSet' ? 'selected' : ''}>Matches regex pattern set</option>
+                    <option value="matchesRegex" ${condition.match_type === 'matchesRegex' ? 'selected' : ''}>Matches regex</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="value-${conditionId}">Value:</label>
+                <input type="text" name="value[]" id="value-${conditionId}" class="form-control value-input" placeholder="String/Regex to match" value="${condition.value || ''}" required>
+            </div>
+            
+            <!-- Delete Condition Button -->
+            <button type="button" class="btn btn-danger" onclick="deleteCondition('${conditionId}')">Delete Condition</button>
+        </div>`;
+    
+    conditionsContainer.insertAdjacentHTML('beforeend', conditionTemplate);
+    
+    // Add event listener for the new inspect select
+    const inspectSelect = document.getElementById(`inspect-${conditionId}`);
+    const fieldNameGroup = document.getElementById(`fieldName-${conditionId}`).closest('.field-name-group');
+
+    inspectSelect.addEventListener('change', function () {
+        if (['singleHeader', 'singleCookie', 'singleQueryParameter'].includes(inspectSelect.value)) {
+            fieldNameGroup.style.display = 'block';
+        } else {
+            fieldNameGroup.style.display = 'none';
+        }
+    });
+
+    // Trigger initial state for field name visibility
+    inspectSelect.dispatchEvent(new Event('change'));
+}
+
+function deleteCondition(conditionId) {
+    const conditionElement = document.getElementById(conditionId);
+    if (conditionElement) {
+        conditionElement.remove();
+    } else {
+        console.error(`Condition with ID ${conditionId} not found.`);
+    }
+}
+
+// Bind form submission
+document.getElementById('ruleForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Gather form data
+    const formData = {
+        ruleId: document.getElementById('ruleId').value,
+        ruleName: document.getElementById('ruleName').value,
+        description: document.getElementById('description').value,
+        anomalyScore: document.getElementById('anomalyScore').value,
+        action: document.getElementById('action').value,
+        conditions: []
+    };
+
+    document.querySelectorAll('#conditionsContainer .condition').forEach(conditionElement => {
+        const condition = {
+            type: conditionElement.querySelector('.condition-type-select').value,
+            inspect: conditionElement.querySelector('.inspect-select').value,
+            fieldName: conditionElement.querySelector('.field-name-input').value,
+            match_type: conditionElement.querySelector('.match-type-select').value,
+            value: conditionElement.querySelector('.value-input').value,
+        };
+        formData.conditions.push(condition);
+    });
+
+    const url = formData.ruleId ? `/admin/rules/${formData.ruleId}/edit` : '/admin/rules';
+    const method = formData.ruleId ? 'PUT' : 'POST';
+
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Rule saved successfully!');
+            closeRuleModal();
+        } else {
+            alert('Error saving rule.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+function closeRuleModal() {
+    document.getElementById('ruleModal').style.display = 'none';
+}
+
+
+
+</script>
