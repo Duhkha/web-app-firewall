@@ -1,11 +1,11 @@
-require('dotenv').config(); 
 
 module.exports = {
-  PORT: process.env.PORT || 3001,
-  MONGO_URI: 'mongodb://127.0.0.1:27017/waf',
-  TARGET_URL: 'http://192.168.1.14:8080',
-  SESSION_SECRET: process.env.SESSION_SECRET, 
-  API_SECRET: process.env.API_SECRET,
+  PORT: 3001,
+  MONGO_URI: 'mongodb+srv://doadmin:891r6at35o2UyAc4@db-mongodb-fra1-21834-507be872.mongo.ondigitalocean.com/waf?tls=true&authSource=admin&replicaSet=db-mongodb-fra1-21834',
+  TARGET_URL: 'http://demo.owasp-juice.shop',
+  SESSION_SECRET: 'sussy', 
+  API_SECRET: 'skibidi',
   adminUsername: 'admin', 
   adminPassword: 'admin123', 
+  JWT_SECRET: 'ismarr'
 };

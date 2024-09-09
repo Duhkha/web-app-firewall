@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../config/config');
 
 module.exports = async function authMiddleware(req, res, next) {
     const cookies = req.headers.cookie ? req.headers.cookie.split(';').reduce((acc, cookie) => {

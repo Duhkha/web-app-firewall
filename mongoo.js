@@ -1,33 +1,51 @@
-// helper script to populate the database with an admin user
-
 const mongoose = require('mongoose');
-const User = require('./models/userModel'); // Adjust the path to your user model
+const RuleGroup = require('./models/ruleGroupModel'); // Path to your RuleGroup model
 
-async function createAdminUser() {
+async function populateRuleGroups() {
   await mongoose.connect('mongodb://127.0.0.1:27017/waf', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
-  const username = "admin"; // Customize as needed
-  const password = "admin123"; // Customize as needed
+  // Copy and paste your rule groups here (Command Injection, File Inclusion, etc.)
+  
+  // Example:
+  const commandInjectionProtectionRuleGroup = new RuleGroup({
+    name: 'Command Injection Protection',
+    description: 'Rule group to prevent shell injection attacks',
+    rules: [
+      // ... Add rules for Command Injection Protection here ...
+    ]
+  });
 
-  // Check if the user already exists
-  const existingUser = await User.findOne({ username });
-  if (existingUser) {
-    console.log('User already exists.');
-  } else {
-    const user = new User({
-      username,
-      password // This will be hashed automatically by the pre-save hook in the model
-    });
+  const fileInclusionProtectionRuleGroup = new RuleGroup({
+    name: 'File Inclusion Protection',
+    description: 'Rule group to prevent file inclusion attacks',
+    rules: [
+      // ... Add rules for File Inclusion Protection here ...
+    ]
+  });
+
+  // Add all other rule groups here in the same way (e.g., XXE, Shell Injection, etc.)
   
-    await user.save();
-  
-    console.log('Admin user created successfully.');
+  const ruleGroups = [
+    commandInjectionProtectionRuleGroup,
+    fileInclusionProtectionRuleGroup,
+    // Add all other rule groups here...
+  ];
+
+  // Iterate over each rule group and save it to the database
+  for (const ruleGroup of ruleGroups) {
+    const existingGroup = await RuleGroup.findOne({ name: ruleGroup.name });
+    if (existingGroup) {
+      console.log(`Rule Group "${ruleGroup.name}" already exists.`);
+    } else {
+      await ruleGroup.save();
+      console.log(`Rule Group "${ruleGroup.name}" created successfully.`);
+    }
   }
 
   mongoose.disconnect();
 }
 
-createAdminUser().catch(console.error);
+populateRuleGroups().catch(console.error);

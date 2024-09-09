@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../config/config');
 
 exports.getLogin = (req, res) => {
     res.render('auth/login', {
