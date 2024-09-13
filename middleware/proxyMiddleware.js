@@ -1,19 +1,20 @@
 const http = require('http');
 const logger = require('../utils/logger');  
-const { TARGET_URL } = require('../config/config');
+const { TARGET_URL, API_SECRET } = require('../config/config');
 
 module.exports = function proxyMiddleware(req, res) {
     const targetUrl = new URL(TARGET_URL);
 
     const options = {
         hostname: targetUrl.hostname,
-        port: targetUrl.port || 80, // Ensure the port is set correctly, defaulting to 80 if not specified
+        port: targetUrl.port || 80, 
         path: req.originalUrl,
         method: req.method,
         headers: {
             ...req.headers,
+            'x-auth-token' : API_SECRET,  
             'X-Forwarded-For': req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-            host: targetUrl.hostname // Ensure the host header matches the target hostname
+            host: targetUrl.hostname 
         }
     };
 

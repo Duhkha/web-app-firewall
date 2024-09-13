@@ -1,0 +1,1135 @@
+[{
+    "_id": {
+      "$oid": "66e0283ce24f6b818d59084d"
+    },
+    "name": "SQLi in Query Parameters",
+    "description": "Detects typical SQLi patterns in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "union.*select|select.*from|drop.*table|insert.*into|--|\\' OR \\'1\\'=\\'1\\'",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d59084e"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d59084f"
+    },
+    "name": "SQLi in Request Body",
+    "description": "Detects SQLi patterns in the body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "union.*select|select.*from|drop.*table|insert.*into|--|\\' OR \\'1\\'=\\'1\\'",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590850"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590851"
+    },
+    "name": "SQLi in URI Path",
+    "description": "Detects SQLi patterns in the URI path using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "uriPath",
+        "match_type": "matchesRegexPatternSet",
+        "value": "union.*select|drop.*table|insert.*into|--",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590852"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590853"
+    },
+    "name": "SQLi in Cookies",
+    "description": "Detects SQLi patterns in cookies using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allCookies",
+        "match_type": "matchesRegexPatternSet",
+        "value": "union.*select|drop.*table|insert.*into|--",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590854"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590855"
+    },
+    "name": "SQLi in Headers",
+    "description": "Detects SQLi patterns in headers using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allHeaders",
+        "match_type": "matchesRegexPatternSet",
+        "value": "union.*select|drop.*table|insert.*into|--",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590856"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590857"
+    },
+    "name": "Blind SQLi Time-Based in Query Parameters",
+    "description": "Detects time-based SQLi patterns in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "waitfor delay|sleep\\(",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590858"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590859"
+    },
+    "name": "Blind SQLi Time-Based in Request Body",
+    "description": "Detects time-based SQLi patterns in the body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "waitfor delay|sleep\\(",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d59085a"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d59085b"
+    },
+    "name": "Boolean-Based SQLi in Query Parameters",
+    "description": "Detects boolean-based SQLi patterns in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "AND \\d+=\\d+|OR 1=1",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d59085c"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d59085d"
+    },
+    "name": "Boolean-Based SQLi in Request Body",
+    "description": "Detects boolean-based SQLi patterns in the body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "AND \\d+=\\d+|OR 1=1",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d59085e"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d59085f"
+    },
+    "name": "Error-Based SQLi in Query Parameters",
+    "description": "Detects error-based SQLi patterns in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "sql syntax|mysql_fetch_array|mysql_num_rows|ORA-",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590860"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590861"
+    },
+    "name": "Error-Based SQLi in Request Body",
+    "description": "Detects error-based SQLi patterns in the body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "sql syntax|mysql_fetch_array|mysql_num_rows|ORA-",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590862"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590863"
+    },
+    "name": "Hex-Encoded SQLi in Query Parameters",
+    "description": "Detects hex-encoded SQLi patterns in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "0x[0-9A-F]+",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590864"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e0283ce24f6b818d590865"
+    },
+    "name": "Hex-Encoded SQLi in Request Body",
+    "description": "Detects hex-encoded SQLi patterns in the body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "0x[0-9A-F]+",
+        "_id": {
+          "$oid": "66e0283ce24f6b818d590866"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a96326035"
+    },
+    "name": "Base64-Encoded XSS in Query Parameters",
+    "description": "Detects Base64-encoded XSS payloads in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "data:text\\/html;base64,|<script>.*?<\\/script>",
+        "_id": {
+          "$oid": "66e028b158a3410a96326036"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a96326037"
+    },
+    "name": "JavaScript URIs XSS in Query Parameters",
+    "description": "Detects XSS patterns involving JavaScript URIs in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "javascript:|eval\\(|data:text\\/html;base64,",
+        "_id": {
+          "$oid": "66e028b158a3410a96326038"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a96326039"
+    },
+    "name": "Event Handler XSS in Query Parameters",
+    "description": "Detects XSS patterns involving event handlers in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "onload|onerror|onmouseover|onfocus|onclick|onmouseenter|onmouseleave",
+        "_id": {
+          "$oid": "66e028b158a3410a9632603a"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a9632603b"
+    },
+    "name": "Event Handler XSS in Request Body",
+    "description": "Detects XSS patterns involving event handlers in the request body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "onload|onerror|onmouseover|onfocus|onclick|onmouseenter|onmouseleave",
+        "_id": {
+          "$oid": "66e028b158a3410a9632603c"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a9632603d"
+    },
+    "name": "Inline JavaScript XSS in Query Parameters",
+    "description": "Detects inline JavaScript XSS in query parameters using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "<script>.*?<\\/script>",
+        "_id": {
+          "$oid": "66e028b158a3410a9632603e"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a9632603f"
+    },
+    "name": "Inline JavaScript XSS in Request Body",
+    "description": "Detects inline JavaScript XSS in the request body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "<script>.*?<\\/script>",
+        "_id": {
+          "$oid": "66e028b158a3410a96326040"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a96326043"
+    },
+    "name": "Base64-Encoded XSS in Request Body",
+    "description": "Detects Base64-encoded XSS payloads in the request body using regex pattern set",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "data:text\\/html;base64,|<script>.*?<\\/script>",
+        "_id": {
+          "$oid": "66e028b158a3410a96326044"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e028b158a3410a96326045"
+    },
+    "name": "XSS in URI Path",
+    "description": "Detects XSS patterns in the URI path",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "uriPath",
+        "match_type": "matchesRegex",
+        "value": "<.*?(script|img|iframe|onerror|onload|javascript:|eval\\(\\)).*?>",
+        "_id": {
+          "$oid": "66e028b158a3410a96326046"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 10,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ebff"
+    },
+    "name": "NoSQLi in Query Parameters",
+    "description": "Detects NoSQLi patterns in query parameters",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\$where|\\$ne|\\$eq|\\$gt|\\$lt|\\$in|\\$nin|\\$regex|\\$exists|\\$all",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec00"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 10,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec01"
+    },
+    "name": "NoSQLi in Request Body",
+    "description": "Detects NoSQLi patterns in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\$where|\\$ne|\\$eq|\\$gt|\\$lt|\\$in|\\$nin|\\$regex|\\$exists|\\$all",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec02"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 10,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec03"
+    },
+    "name": "NoSQLi in URI Path",
+    "description": "Detects NoSQLi patterns in the URI path",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "uriPath",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\$where|\\$ne|\\$eq|\\$gt|\\$lt|\\$in|\\$nin|\\$regex|\\$exists|\\$all",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec04"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 10,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec05"
+    },
+    "name": "NoSQLi in Cookies",
+    "description": "Detects NoSQLi patterns in cookies",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allCookies",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\$where|\\$ne|\\$eq|\\$gt|\\$lt|\\$in|\\$nin|\\$regex|\\$exists|\\$all",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec06"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 10,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec07"
+    },
+    "name": "NoSQLi in Headers",
+    "description": "Detects NoSQLi patterns in headers",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allHeaders",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\$where|\\$ne|\\$eq|\\$gt|\\$lt|\\$in|\\$nin|\\$regex|\\$exists|\\$all",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec08"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 10,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec09"
+    },
+    "name": "JavaScript NoSQLi in Query Parameters",
+    "description": "Detects JavaScript-based NoSQL injection attempts in query parameters",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "function\\(.*\\)|eval\\(.*\\)|new Function\\(.*\\)",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec0a"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec0b"
+    },
+    "name": "JavaScript NoSQLi in Request Body",
+    "description": "Detects JavaScript-based NoSQL injection attempts in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "function\\(.*\\)|eval\\(.*\\)|new Function\\(.*\\)",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec0c"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec0d"
+    },
+    "name": "NoSQLi Operator Overloading in Query Parameters",
+    "description": "Detects NoSQL operator overloading in query parameters",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\{\\$.*\\}",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec0e"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec0f"
+    },
+    "name": "NoSQLi Operator Overloading in Request Body",
+    "description": "Detects NoSQL operator overloading in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\{\\$.*\\}",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec10"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec11"
+    },
+    "name": "NoSQLi via MongoDB Operators in Query Parameters",
+    "description": "Detects injection of MongoDB NoSQL operators in query parameters",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\$or|\\$and|\\$nor",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec12"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec13"
+    },
+    "name": "NoSQLi via MongoDB Operators in Request Body",
+    "description": "Detects injection of MongoDB NoSQL operators in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "\\$or|\\$and|\\$nor",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec14"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec15"
+    },
+    "name": "Error-Based NoSQLi in Query Parameters",
+    "description": "Detects error-based NoSQLi patterns in query parameters",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "Cannot use .* for .* expression|BadValue|Error parsing query",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec16"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e03520d4fb9ff75053ec17"
+    },
+    "name": "Error-Based NoSQLi in Request Body",
+    "description": "Detects error-based NoSQLi patterns in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "Cannot use .* for .* expression|BadValue|Error parsing query",
+        "_id": {
+          "$oid": "66e03520d4fb9ff75053ec18"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 15,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e864135847"
+    },
+    "name": "XXE in Request Body",
+    "description": "Detects XXE patterns in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "<!DOCTYPE|<!ENTITY|SYSTEM|PUBLIC|file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e864135848"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e864135849"
+    },
+    "name": "XXE in Query Parameters",
+    "description": "Detects XXE patterns in query parameters",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "<!DOCTYPE|<!ENTITY|SYSTEM|PUBLIC|file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e86413584a"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e86413584b"
+    },
+    "name": "XXE in URI Path",
+    "description": "Detects XXE patterns in the URI path",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "uriPath",
+        "match_type": "matchesRegexPatternSet",
+        "value": "<!DOCTYPE|<!ENTITY|SYSTEM|PUBLIC|file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e86413584c"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e86413584d"
+    },
+    "name": "XXE in Cookies",
+    "description": "Detects XXE patterns in cookies",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allCookies",
+        "match_type": "matchesRegexPatternSet",
+        "value": "<!DOCTYPE|<!ENTITY|SYSTEM|PUBLIC|file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e86413584e"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e86413584f"
+    },
+    "name": "XXE in Headers",
+    "description": "Detects XXE patterns in headers",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allHeaders",
+        "match_type": "matchesRegexPatternSet",
+        "value": "<!DOCTYPE|<!ENTITY|SYSTEM|PUBLIC|file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e864135850"
+        }
+      }
+    ],
+    "action": "monitor",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e864135851"
+    },
+    "name": "SYSTEM Entity in Request Body",
+    "description": "Detects SYSTEM external entity in XML structure in request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegexPatternSet",
+        "value": "SYSTEM\\s+[\"']file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e864135852"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e864135853"
+    },
+    "name": "SYSTEM Entity in Query Parameters",
+    "description": "Detects SYSTEM external entity in XML structure in query parameters",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allQueryParameters",
+        "match_type": "matchesRegexPatternSet",
+        "value": "SYSTEM\\s+[\"']file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e864135854"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e864135855"
+    },
+    "name": "SYSTEM Entity in URI Path",
+    "description": "Detects SYSTEM external entity in XML structure in the URI path",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "uriPath",
+        "match_type": "matchesRegexPatternSet",
+        "value": "SYSTEM\\s+[\"']file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e864135856"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e864135857"
+    },
+    "name": "SYSTEM Entity in Cookies",
+    "description": "Detects SYSTEM external entity in XML structure in cookies",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allCookies",
+        "match_type": "matchesRegexPatternSet",
+        "value": "SYSTEM\\s+[\"']file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e864135858"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e035de478d61e864135859"
+    },
+    "name": "SYSTEM Entity in Headers",
+    "description": "Detects SYSTEM external entity in XML structure in headers",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "allHeaders",
+        "match_type": "matchesRegexPatternSet",
+        "value": "SYSTEM\\s+[\"']file://|http://|ftp://",
+        "_id": {
+          "$oid": "66e035de478d61e86413585a"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd72"
+    },
+    "name": "SQLi in Body - CHR/Casting Functions",
+    "description": "Detects SQLi patterns using CHR, CAST, and complex conditional logic in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "CHR\\(\\d+\\)|CAST\\(|SELECT .*? WHEN .*? THEN|DBMS_PIPE\\.RECEIVE_MESSAGE",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd73"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd74"
+    },
+    "name": "SQLi in Body - Character Concatenation",
+    "description": "Detects SQLi patterns involving UNION SELECT and character concatenation in the body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "CONCAT\\(.*?\\)|UNION SELECT.*CHAR\\(\\d+\\)|CHAR\\(\\d+\\).*?\\+",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd75"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd76"
+    },
+    "name": "SQLi in Body - Time-Based Injection",
+    "description": "Detects SQLi patterns using DBMS_PIPE, sleep-based delays in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "DBMS_PIPE\\.RECEIVE_MESSAGE\\(.*?\\)|SLEEP\\(.*?\\)",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd77"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd78"
+    },
+    "name": "SQLi in Body - Complex SELECT Queries",
+    "description": "Detects SQLi patterns with CHR and SELECT queries in the request body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "SELECT.*CHR\\(\\d+\\).*CASE.*WHEN.*THEN",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd79"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd7a"
+    },
+    "name": "SQLi in Body - Character Manipulation with Conditional Logic",
+    "description": "Detects SQLi patterns using character manipulation and conditional logic in the body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "CHAR\\(\\d+\\).*\\+.*WHEN.*THEN.*ELSE",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd7b"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 30,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd7c"
+    },
+    "name": "SQLi in Body - Conditional Logic",
+    "description": "Detects SQLi patterns with conditional logic (AND/OR) in the body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "(\\bAND\\b|\\bOR\\b).*?\\d+=\\d+.*?(SELECT|DBMS_PIPE|CAST|CHR)",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd7d"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd7e"
+    },
+    "name": "SQLi in Body - SQL Function Exploitation",
+    "description": "Detects SQLi patterns using SQL casting, and function calls in the body",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "CAST\\(.*? AS.*?|\\bCASE\\b.*WHEN.*?THEN",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd7f"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd80"
+    },
+    "name": "SQLi in Body - Email Field Manipulation",
+    "description": "Detects SQLi patterns where email fields contain SQL function manipulation",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "email\\s*:\\s*[\"']?.*?(\\+|CHAR\\(|CHR\\(|SELECT).*?[\"']?",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd81"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 20,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e06f34456c80318da2cd82"
+    },
+    "name": "SQLi in Body - Complex Email SQL Injection",
+    "description": "Detects complex SQLi patterns in email fields involving SQL logic",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "body",
+        "match_type": "matchesRegex",
+        "value": "email\\s*:\\s*[\"']?.*?(SELECT|DBMS_PIPE|CHR\\(|CAST).*?[\"']?",
+        "_id": {
+          "$oid": "66e06f34456c80318da2cd83"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 25,
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "66e427e242f75b5b01bbcef8"
+    },
+    "name": "Block iphone",
+    "description": "",
+    "conditions": [
+      {
+        "type": "MATCH",
+        "inspect": "singleHeader",
+        "fieldName": "user-agent",
+        "match_type": "contains",
+        "value": "iPhone",
+        "_id": {
+          "$oid": "66e427e242f75b5b01bbcef9"
+        }
+      }
+    ],
+    "action": "block",
+    "anomalyScore": 4,
+    "__v": 0
+  }]

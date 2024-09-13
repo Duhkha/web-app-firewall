@@ -24,7 +24,7 @@ module.exports = async function wafMiddleware(req, res, next) {
                         console.log(`WAF Middleware: Blocking request due to rule ${rule.name}`);
                         session.anomalyScore += anomalyScoreIncrease;
                         await session.save(); 
-                        return res.status(403).send('Forbidden: Request blocked by WAF!');
+                        return res.status(403).send(`Forbidden: Request blocked by WAF! Rule: "${rule.name}"`);
                     } else if (rule.action === 'allow') {
                         session.anomalyScore += anomalyScoreIncrease;
                         await session.save();
@@ -56,7 +56,6 @@ const evaluateRule = (rule, req) => {
     return rule.conditions.every(condition => evaluateCondition(condition, req));
 };
 
-
 const evaluateCondition = (condition, req) => {
     const targetValue = getRequestTargetValue(condition.inspect, condition.fieldName, req);
 
@@ -64,11 +63,11 @@ const evaluateCondition = (condition, req) => {
         case 'MATCH':
             return matchValue(condition.match_type, targetValue, condition.value);
         case 'AND':
-            return condition.sub_conditions.every(subCondition => evaluateCondition(subCondition, req));
+            return rule.conditions.every(cond => evaluateCondition(cond, req));
         case 'OR':
-            return condition.sub_conditions.some(subCondition => evaluateCondition(subCondition, req));
+            return rule.conditions.some(cond => evaluateCondition(cond, req));
         case 'NOT':
-            return !evaluateCondition(condition.sub_conditions[0], req);
+            return !evaluateCondition(rule.conditions[0], req);
         default:
             return false;
     }
@@ -113,23 +112,46 @@ const getRequestTargetValue = (inspect, fieldName, req) => {
 };
 
 
-const matchValue = (matchType, targetValue, matchValue) => {
+const matchValue = (matchType, targetValue, conditionValue) => {
     if (typeof targetValue !== 'string') return false;
-    
+
     switch (matchType) {
         case 'exactlyMatches':
-            return targetValue === matchValue;
+            return targetValue === conditionValue;
         case 'startsWith':
-            return targetValue.startsWith(matchValue);
+            return targetValue.startsWith(conditionValue);
         case 'endsWith':
-            return targetValue.endsWith(matchValue);
+            return targetValue.endsWith(conditionValue);
         case 'contains':
-            return targetValue.includes(matchValue);
+            return targetValue.includes(conditionValue);
         case 'containsWord':
-            return new RegExp(`\\b${matchValue}\\b`).test(targetValue);
+            return new RegExp(`\\b${conditionValue}\\b`).test(targetValue);
         case 'matchesRegex':
-            return new RegExp(matchValue).test(targetValue);
+            try {
+                const isCaseInsensitive = conditionValue.startsWith('(?i)');
+                const regexPattern = isCaseInsensitive ? conditionValue.slice(4) : conditionValue;
+                const regex = new RegExp(regexPattern, isCaseInsensitive ? 'i' : undefined);
+                return regex.test(targetValue);
+            } catch (error) {
+                console.error(`Invalid regex: ${conditionValue}`, error);
+                return false;
+            }
+        case 'matchesRegexPatternSet':
+            try {
+                const patterns = conditionValue.split('|');
+
+                return patterns.some(pattern => {
+                    pattern = pattern.trim(); 
+                    const regex = new RegExp(pattern, 'i'); 
+                    return regex.test(targetValue);
+                });
+            }  catch (error) {
+                console.error(`Invalid regex pattern set: ${conditionValue}`, error);
+                return false;
+            }
         default:
             return false;
     }
 };
+
+

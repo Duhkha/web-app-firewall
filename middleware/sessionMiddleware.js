@@ -40,7 +40,12 @@ module.exports = async function sessionMiddleware(req, res, next) {
 
         if (session.requestCount > maxRequests) {
           console.log(`Rate limit exceeded for session: ${session.sessionId}`);
-          return res.redirect('/blocked.html');
+          //return res.redirect('/blocked.html');
+          return res.status(429).json({
+            error: 'Rate limit exceeded',
+            message: 'You have made too many requests. Please try again later.'
+          });
+
         }
 
         if (session.anomalyScore > settings.anomalyScoreThreshold) {
